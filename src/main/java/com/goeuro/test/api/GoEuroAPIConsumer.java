@@ -8,6 +8,7 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
@@ -17,11 +18,14 @@ import java.util.List;
 @Component
 public class GoEuroAPIConsumer {
 
+    @Value("${goeuro.api.baseUrl}")
+    String baseApiUrl;
+
     public List<GoEuroSuggestion> getSuggestions(String cityName) throws GoEuroAPICallException {
 
         try {
             HttpClient httpClient = HttpClientBuilder.create().build();
-            HttpGet request = new HttpGet("http://api.goeuro.com/api/v2/position/suggest/en/" + cityName);
+            HttpGet request = new HttpGet(baseApiUrl + "/v2/position/suggest/en/" + cityName);
             HttpResponse response = httpClient.execute(request);
             String responseAsString = EntityUtils.toString(response.getEntity());
 

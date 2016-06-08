@@ -18,9 +18,15 @@ public class Application {
 
         if(args.length == 0){
             System.out.println("The city name must be specified.");
+            return;
         }
 
         String cityName = args[0];
+
+        if(cityName == null || cityName == ""){
+            System.out.println("The city name must be specified and valid.");
+            return;
+        }
 
         ApplicationContext context =
                 new AnnotationConfigApplicationContext(AppConfig.class);
@@ -32,6 +38,11 @@ public class Application {
 
         try {
             suggestions = apiConsumer.getSuggestions(cityName);
+
+            if(suggestions.size() == 0){
+                System.out.println( String.format("No suggestions for the specified city \"%s\" were found, so not creating a file.", cityName));
+                return;
+            }
 
             String fileName = String.format("%s_%d.csv", cityName, System.currentTimeMillis());
 
